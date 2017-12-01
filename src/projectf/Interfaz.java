@@ -1,0 +1,462 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package projectf;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+//PARA ANALIZAR HAY QUE EJECUTAR HERRAMIENTAS----->ANALIZAR
+/**
+ *
+ * @author carlo
+ */
+public class Interfaz extends javax.swing.JFrame {
+
+    /**
+     * Creates new form Interfaz
+     */
+    AnalizadorLexico lex;
+     parser par;
+    int estado;
+    boolean existencia;
+        File ficheros;
+        String rutapath,nombreruta="";
+      
+        //----------creacion de filechooser 
+    String filechooser(){// metodo que abre el jfilechooser
+        rutapath="";
+        nombreruta="";
+        existencia=false;
+        estado=0;
+        
+        
+    FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos Der","der");    
+    JFileChooser file= new JFileChooser();
+    file.setFileFilter(filtro);
+    estado=file.showOpenDialog(this);
+          
+             
+    if(estado==0){ // si es igual a 0 significa que se selecciono un archivo
+          existencia=false;
+        
+          System.out.println("archivo seleccionado"+existencia);
+    try{
+        
+           ficheros=file.getSelectedFile();
+           nombreruta=file.getName(ficheros);// recuperamos el nombre del archivo .der
+       
+           
+           rutapath=ficheros.getAbsolutePath();// recuperamos todos las rutas absolutas del archivo.der.
+              System.out.println("lnombre "+nombreruta);
+              System.out.println("ruta del archivo  "+rutapath);
+              
+              
+              
+              
+       
+              
+       } catch(NullPointerException e){
+           System.out.println("No selecciono ningun archivo");
+       }
+
+      }else{
+        existencia=true; // se activa cuando se da en cancelar el JFILECHOOSER DEPENDE de estado=0
+         
+      } 
+    return rutapath;
+}
+    
+       //------------ guarda el archivo------------------------------
+    public void guardarDer(String nombrearchivo){
+  
+      File archivo;
+      FileWriter fw;
+    try{
+         archivo= new File(nombrearchivo);
+        fw= new FileWriter(archivo);
+      BufferedWriter bw= new BufferedWriter(fw);
+      PrintWriter pw= new PrintWriter(bw);
+    String[] archivoo=jTextArea1.getText().split("\\n");
+       
+        for (int i = 0; i < archivoo.length; i++) {
+                pw.write(archivoo[i]+"\r\n");
+            
+            
+        }
+   
+    pw.close();
+      bw.close();
+    }catch(IOException e){
+        System.out.println("Error al escribir el archivo de archivo"+e.getMessage());
+    }
+    
+  }
+    
+    
+       //----------------------- lee el archivo------------ 
+    String AbrirDer(String nombrearchivo){//metodo para leer el archivo seleccionado en el jfilechooser.
+   File archivolector;
+       FileReader FR; 
+        
+       try{
+         archivolector= new File(nombrearchivo);
+         FR= new FileReader(archivolector);
+       BufferedReader br= new BufferedReader(FR);
+       String l="";
+       String aux="";
+      
+     while(true){
+      aux=br.readLine();
+       if(aux!=null)
+         l=l+aux+"\n";
+       
+      
+       else break;
+    
+     } 
+          // System.out.println(l);
+      br.close();
+       FR.close();
+     return l;
+       
+       }catch(IOException e){
+           System.out.println("Ha ocurrido un error"+e.getMessage());
+       }
+     return null;  
+    }
+
+    
+     //-----------------------Analiza lexico y sintactico
+     void AnalizarLexicoYSintactico(){// metodo para abrir un archivo deer
+     
+               
+   try{
+       
+            lex = new AnalizadorLexico (new BufferedReader( new StringReader(jTextArea1.getText())));
+            par= new parser(lex);
+            par.parse();
+           if(par.aceptadooo==true){
+           JOptionPane.showMessageDialog( null,"Archivo analizado correctamente");
+           }
+           
+     
+       
+        
+         }catch(FileNotFoundException ex){
+             System.out.println("Error en archivo "+ex.toString());
+         }  catch (Exception ex) {
+                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+            }
+     }
+     
+     
+     
+     
+    public Interfaz() {
+        initComponents();
+        
+        
+             
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea3 = new javax.swing.JTextArea();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        jLabel1.setText("Automatas");
+
+        jTextArea2.setColumns(20);
+        jTextArea2.setRows(5);
+        jScrollPane2.setViewportView(jTextArea2);
+
+        jLabel2.setText("Tabla de Transiciones");
+
+        jTextArea3.setColumns(20);
+        jTextArea3.setRows(5);
+        jScrollPane3.setViewportView(jTextArea3);
+
+        jMenu1.setText("Archivos");
+
+        jMenuItem1.setText("Abrir D-er");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem2.setText("Guardar D-err");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Herramientas");
+
+        jMenuItem7.setText("Ejecutar");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem7);
+
+        jMenuItem3.setText("Cargar Thompson");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem3);
+
+        jMenuItem4.setText("Guardar Tokens");
+        jMenu2.add(jMenuItem4);
+
+        jMenuItem5.setText("Guardar Errores");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem5);
+
+        jMenuItem6.setText("Ver Reportes");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem6);
+
+        jMenuItem8.setText("Errores Le y Si");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem8);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(312, 312, 312)
+                        .addComponent(jLabel1)
+                        .addGap(0, 43, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)))))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(32, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+     /*GUARDAR D-ER*/
+     
+        String seleccion = JOptionPane.showInputDialog(null,"Seleccione el nombre que le pondra al archivo",JOptionPane.QUESTION_MESSAGE);
+       if(seleccion == null || (seleccion != null && ("".equals(seleccion))))   
+{
+        System.out.println("Se cancelo la seleccion");
+}else{
+          if(jTextArea1.getText().equals("")){
+             JOptionPane.showMessageDialog( null,"EL ARCHIVO A GUARDAR NO CONTIENE NINGUN CARACTER");
+          }else{
+               guardarDer(seleccion+".der");
+               JOptionPane.showMessageDialog( null,"Archivo Almacenado nombre: "+seleccion);
+          }
+          
+  
+         
+       
+       
+       
+    }
+      
+          
+   
+            
+          
+          
+               
+      
+      
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+/*Abrir D-er desde cualquier lado*/
+
+  String path=filechooser();
+  
+  String texto=AbrirDer(path);
+  jTextArea1.setText(texto);
+       
+       
+
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+      
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+      //interprete que analiza linea por linea las expresiones colocadas en jtextArea1
+      
+       AnalizarLexicoYSintactico();
+       
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+       // html para errores lexicos y sintacticos 
+       Errores e= new Errores();
+       e.GenerarHtml("l");
+       e.GenerarHtml("s");
+       
+       
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Interfaz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Interfaz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Interfaz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Interfaz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Interfaz().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea jTextArea3;
+    // End of variables declaration//GEN-END:variables
+}

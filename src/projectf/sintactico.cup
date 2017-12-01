@@ -1,0 +1,156 @@
+package projectf;
+import java_cup.runtime.Symbol;
+import java.util.*;
+import javax.swing.JOptionPane;
+
+parser code{:
+public String resultado="";
+public  boolean aceptadooo=true;
+
+//public static LinkedList<TError> tablaerrorSintactico = new LinkedList<TError>();
+
+// metodo cuando existe un error sintactico
+    public void syntax_error(Symbol s){
+ System.out.println("Error en la columna " + (s.right+1) +" linea "+s.left+ ". Identificador "
+        +s.value + " no reconocido." );
+   JOptionPane.showMessageDialog( null,"Error en la columna " + (s.right+1) +" linea "+s.left+ ". Identificador "
+        +s.value + " no reconocido.");
+   aceptadooo=false;
+}
+
+// metodo cuando ya no se puede recuperar errores 
+public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+ System.out.println("Error en la columna " + (s.right+1)+ " linea "+s.left+". Identificador " +
+        s.value + " no reconocido.");
+    JOptionPane.showMessageDialog( null,"Error en la columna " + (s.right+1) +" linea "+s.left+ ". Identificador "
+        +s.value + " no reconocido.");
+    aceptadooo=false;
+}
+
+:}
+action code
+{:
+LinkedList<String> cola = new LinkedList<String>();
+ArrayList<String> alfabeto= new ArrayList(); 
+String expresion[];
+AFN afn = new AFN();
+Generar generar = new Generar();
+:}
+
+terminal eror,barra, todo,ytext,yrow,ycol,CONJ,retorno,res,saltodelinea,tabulacion,com;
+terminal concat,unaomas,ceroouna,guionbajo,coma,seguido,puntoycoma,iniciofin,ceroomas,orr,hasta,dospuntos,corcheteAbierto,corcheteCerrado,parentesisA,parentesisC;
+terminal comillasD,num,identificador,decimal,comillaS,rang;
+
+
+non terminal INICIO,B,C,D,E,F,LO,DEF,P,EX,ER,ESP,ERR,METODO,RESERVADAS,RETORNO;
+
+start with INICIO;
+
+
+INICIO::=B; 
+B::= iniciofin D iniciofin;
+  
+
+D::=D DEF
+  |D EX
+  |DEF
+  |EX;
+
+DEF::=CONJ dospuntos identificador seguido rang hasta rang puntoycoma 
+     |CONJ dospuntos identificador seguido rang P;
+
+
+P::=  P coma rang puntoycoma 
+    |P coma rang 
+    |coma rang puntoycoma
+    |coma rang
+    | puntoycoma ;
+
+EX::= identificador:id seguido E:a seguido retorno METODO puntoycoma
+{: 
+		 
+System.out.println("la cadena final es:"+a.toString());    expresion=a.toString().split(" ");
+for (int i = expresion.length-1; i >= 0; i--) {// recorremos la expresion regular al revez.. para poder generar el AFN
+                     System.out.println(expresion[i]);
+                     afn.construir(expresion[i]);
+                }
+//-------------------------Crear el AFN en dot  y jpg------------------------------------------------------
+      generar.GenerarDot(id.toString(),generar.estructuraDOT(id.toString(),afn.getFinalAutomata())); 
+      generar.GenerarJpg(id.toString());
+
+//-------------------------------Crear thompson y aFD------------------------------------------------------
+
+AFD afd= new AFD(afn.getFinalAutomata());// se manda como parametro el AFN OBTENIDO ANTERIORMENTE
+afd.MAIN();// Aca se crea la tabla de transiciones
+afn.Limpiar();// booramos todo lo de los automatas anteriores
+//---------------------------------------------------------------------------------------------------------
+
+
+:}
+     |identificador seguido E:a seguido eror parentesisA ytext coma yrow coma ycol parentesisC puntoycoma {:System.out.println("el tamaño de la cola es "+cola.size());:}
+ ;
+
+E::=concat E:a E:b   {:RESULT=". "+a+" "+b;    System.out.print("concat E : "+a);  System.out.println(" E "+b); :}
+   | orr E:a E:b     {:  RESULT="| "+a+" "+b;  System.out.print("or E : "+a);  System.out.println(" E :"+b);   :}
+   | unaomas E:a     {:  RESULT="+ "+a;        System.out.println("'+' "+a);:}
+   | ceroouna E:a    {:  RESULT="? "+a;        System.out.println("'?' "+a);  :}
+   | ceroomas E:a    {:  RESULT="* "+a;        System.out.println("'*' "+a);  :}  
+   | LO:a            {:  RESULT=""+a;          System.out.println("frase :"+a);     alfabeto.add(a.toString());:}
+;
+
+
+LO::=identificador:var  {: RESULT=var; :}
+   |comillasD F:var comillasD   {: RESULT="\""+var+"\"";:}
+   |todo:var  {: RESULT=var;:}
+;
+
+F::=concat:cadenas      {:  RESULT=cadenas; :}
+   |unaomas:cadenas      {:  RESULT=cadenas; :}
+   |ceroouna:cadenas     {:  RESULT=cadenas;  :}
+   |ceroomas:cadenas     {:  RESULT=cadenas;  :}
+   |barra:cadenas        {:  RESULT=cadenas;  :}
+   |comillaS:cadenas     {:  RESULT=cadenas;  :}
+   |coma:cadenas         {:  RESULT=cadenas; :}
+   |seguido:cadenas      {:  RESULT=cadenas;  :}
+   |puntoycoma:cadenas      {:  RESULT=cadenas; :}
+   |guionbajo:cadenas    {:  RESULT=cadenas;  :}
+   |iniciofin:cadenas         {:  RESULT=cadenas;  :}
+   |orr:cadenas               {:  RESULT=cadenas; :}
+   |hasta:cadenas             {:  RESULT=cadenas;  :}
+   |dospuntos:cadenas         {:  RESULT=cadenas;  :}
+   |corcheteAbierto:cadenas  {:  RESULT=cadenas;  :}
+   |corcheteCerrado:cadenas  {:  RESULT=cadenas;:}
+   |parentesisA:cadenas  {:  RESULT=cadenas; :}
+   |parentesisC:cadenas  {:  RESULT=cadenas; :}
+   |com:cadenas          {:  RESULT=cadenas;  :}
+   |tabulacion:cadenas   {:  RESULT=cadenas; :}
+   |rang:cadenas         {:  RESULT=cadenas;   :}
+   |identificador:cadenas         {:  RESULT=cadenas;   :}
+
+;
+
+METODO::=parentesisA comillasD identificador comillasD coma ytext coma yrow coma ycol  parentesisC
+       | parentesisA comillasD identificador comillasD coma ytext coma yrow coma ycol  parentesisC seguido RESERVADAS
+;
+
+RESERVADAS::= res corcheteAbierto RETORNO corcheteCerrado
+;
+
+RETORNO::=RETORNO comillasD identificador comillasD seguido retorno parentesisA comillasD identificador comillasD coma ytext coma yrow coma ycol  parentesisC puntoycoma
+        |comillasD identificador comillasD seguido retorno parentesisA comillasD identificador comillasD coma ytext coma yrow coma ycol  parentesisC puntoycoma
+        ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+             

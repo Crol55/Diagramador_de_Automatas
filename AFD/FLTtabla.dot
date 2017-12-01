@@ -1,0 +1,33 @@
+digraph tabla {
+	graph [ratio=fill];
+	node [label="\N", fontsize=15, shape=plaintext];
+	graph [bb="0,0,352,154"];
+	arset [label=<
+		<TABLE ALIGN="LEFT">
+<TR>
+<TD>Estado</TD>
+<TD>digito</TD>
+<TD>"."</TD>
+<TD>digito</TD>
+</TR>
+<TR>
+<TD>0</TD>
+<TD>1</TD>
+<TD>-1</TD>
+<TD>1</TD>
+</TR>
+<TR>
+<TD>1</TD>
+<TD>1</TD>
+<TD>2</TD>
+<TD>1</TD>
+</TR>
+<TR>
+<TD>2</TD>
+<TD>1</TD>
+<TD>2</TD>
+<TD>1</TD>
+</TR>
+</TABLE>
+>, ];
+}

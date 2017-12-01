@@ -1,0 +1,22 @@
+digraph AFN {
+	rankdir=LR;
+	graph [label="FLT", labelloc=t, fontsize=20]; 
+	node [shape=doublecircle, style = filled,color = mediumseagreen];
+ 9;
+	node [shape=circle];
+	node [color=midnightblue,fontcolor=white];
+	edge [color=red];
+	secret_node [style=invis];
+	secret_node -> 0 [label="inicio"];
+	0->1 [label="ε"]
+	1->2 [label="digito"]
+	2->1 [label="ε"]
+	2->3 [label="ε"]
+	3->4 [label="ε"]
+	4->5 [label="."]
+	5->6 [label="ε"]
+	6->7 [label="ε"]
+	7->8 [label="digito"]
+	8->7 [label="ε"]
+	8->9 [label="ε"]
+}

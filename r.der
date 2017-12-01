@@ -1,0 +1,11 @@
+%%
+     CONJ: letra -> a~z;
+		CONJ: digito -> 0~9;
+Identificador -> . letra * | "_" | letra digito -> retorno("tCuenta", yytext, yyrow, yycol) -> RESERV["crear" -> retorno("tCrear", yytext, yyrow, yycol);
+ "retirar" -> retorno("tRetirar", yytext, yyrow, yycol);];
+
+
+Decimal -> . digito . "." + digito -> retorno("tMonto", yytext, yyrow, yycol);
+Comentario -> . "/" . "/" [:todo:] -> retorno("tImprimir", yytext, yyrow, yycol);
+Error -> [:todo:] -> error(yytext, yyrow, yycol);
+%%
